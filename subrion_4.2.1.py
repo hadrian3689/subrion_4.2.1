@@ -11,12 +11,12 @@ class Subrion:
         self.url = self.check_url()
 
         self.session = requests.Session()
-        self.token = self.get_csrf() #Required for Login
+        self.token = self.get_csrf()
         self.login()
         self.upload()
 
     def check_url(self):
-        check = self.target[-1] #Get the last character
+        check = self.target[-1]
         if check == "/": 
             return self.target
         else:
