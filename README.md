@@ -1,8 +1,4 @@
-# Project Title
-
-Subrion 4.2.1 PHAR File Upload Authenticated Remote Code Execution (RCE)
-
-## Description
+# Subrion 4.2.1 PHAR File Upload
 
 A python3 script for Subrion 4.2.1 PHAR File Upload Authenticated Remote Code Execution (RCE)
 
